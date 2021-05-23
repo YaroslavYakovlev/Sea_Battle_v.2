@@ -1,18 +1,11 @@
 #include <iostream>
 #include <vector>
+
 const int n = 10;
-
-void singleShip(int (&arr)[n][n], int x, int y){
-  arr[x][y] = 1;
-}
-
-void ship(int (&arr)[n][n], int begin_x, int begin_y, int end_x, int end_y, int count){
-  for(int i = begin_x; i <= end_x; i++){
-      for(int j = begin_y; j <= end_y; j++){
-        arr[i][j] = count;
-      }
-    }
-}
+int countDecksPlayer1 = 20;
+int countDecksPlayer2 = 20;
+int x, y, begin_x, begin_y, end_x, end_y, count;
+bool hit;
 
 void printField(int (&arr)[n][n]){
   for(int i = 0; i < n; i++){
@@ -22,22 +15,38 @@ void printField(int (&arr)[n][n]){
     std::cout << std::endl;
   }
 }
-int main(){
-  std::cout << "Sea_Battle_v.2" << std::endl;
 
-  int arrField[n][n];
-  int x, y, begin_x, begin_y, end_x, end_y, count;
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < n; j++){
-      arrField[i][j] = 0;
+void singleShip(int (&arr)[n][n], int x, int y){
+  arr[x][y] = 1;
+}
+
+void ship(int (&arr)[n][n], int begin_x, int begin_y, int end_x, int end_y, int count){
+    if(begin_x > 10 || begin_x < 0 || begin_y > 10 || begin_y < 0 || 
+      end_x > 10 || end_x < 0 || end_y > 10 || end_y < 0){
+        std::cout << "Error enter" << std::endl;
+    }else{
+      // if((end_x - begin_x) && (end_y - begin_y) == count){
+        for(int i = begin_x; i <= end_x; i++){
+          for(int j = begin_y; j <= end_y; j++){
+            arr[i][j] = count;
+          }
+        }
+      // }else{
+      //   std::cout << "Error coordinate" << std::endl;
+      // }
     }
-  }
-  
-  for(int i = 0; i < 4; i++){
+}
+
+void shipPlacement(int (&arr)[n][n]){
+for(int i = 0; i < 4; i++){
     std::cout << "Single-deck ship" << std::endl;
     std::cin >> x >> y;
-    singleShip(arrField, x, y);
-    printField(arrField);
+    if(x > 10 || x < 0 || y > 10 || y < 0){
+      std::cout << "Error enter" << std::endl;
+    }else{
+      singleShip(arr, x, y);
+      printField(arr);
+    }
   }
 
  for(int i = 0; i < 3; i++){
@@ -46,8 +55,8 @@ int main(){
     std::cin >> begin_x >> begin_y;
     std::cout << "Enter the coordinates of the end" << std::endl;
     std::cin >> end_x >> end_y;
-    ship(arrField, begin_x, begin_y, end_x, end_y, 2);
-    printField(arrField);    
+    ship(arr, begin_x, begin_y, end_x, end_y, 2);
+    printField(arr);    
   }
 
   for(int i = 0; i < 2; i++){
@@ -56,8 +65,8 @@ int main(){
     std::cin >> begin_x >> begin_y;
     std::cout << "Enter the coordinates of the end" << std::endl;
     std::cin >> end_x >> end_y;
-    ship(arrField, begin_x, begin_y, end_x, end_y, 3);
-    printField(arrField);    
+    ship(arr, begin_x, begin_y, end_x, end_y, 3);
+    printField(arr);    
     }
 
   for(int i = 0; i < 1; i++){
@@ -66,12 +75,65 @@ int main(){
     std::cin >> begin_x >> begin_y;
     std::cout << "Enter the coordinates of the end" << std::endl;
     std::cin >> end_x >> end_y;
-    ship(arrField, begin_x, begin_y, end_x, end_y, 4);
-    printField(arrField);    
+    ship(arr, begin_x, begin_y, end_x, end_y, 4);
+    printField(arr);    
+  }
+}
+
+void battle(int (&arr)[n][n], int shot_x, int shot_y){
+  if(arr[shot_x][shot_y] != 0){
+    std::cout << "There is a hit" << std::endl;
+    arr[shot_x][shot_y] = 0;
+    hit = true;
+  }else {
+    std::cout << "Miss" << std::endl;
+  }
+}
+
+
+int main(){
+  std::cout << "Sea_Battle_v.2" << std::endl;
+
+  int arrField_pleyer_1[n][n];
+  int arrField_pleyer_2[n][n];
+  int shot_x, shot_y;
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < n; j++){
+      arrField_pleyer_1[i][j] = 0;
+    }
+  }
+  
+  std::cout << "Player 1" << std::endl;
+  shipPlacement(arrField_pleyer_1);
+  
+  std::cout << "Player 2" << std::endl;
+  shipPlacement(arrField_pleyer_2);
+
+  while (countDecksPlayer1 > 0 || countDecksPlayer2 > 0)
+  {
+    hit = false;
+    std::cout << "Player's turn 1" << std::endl;
+    std::cout << "Enter the coordinates of the shot" << std::endl;
+    std::cin >> shot_x >> shot_y;
+    battle(arrField_pleyer_2, shot_x, shot_y);
+    if(hit)
+      countDecksPlayer2--;
+
+    hit = false;
+    std::cout << "Player's turn 2" << std::endl;
+    std::cout << "Enter the coordinates of the shot" << std::endl;
+    std::cin >> shot_x >> shot_y;
+    battle(arrField_pleyer_1, shot_x, shot_y);
+    if(hit)
+      countDecksPlayer1--;
+
+    if(countDecksPlayer2 == 0){
+      std::cout << "Player 1 win" << std::endl;
+    }else if(countDecksPlayer1 == 0){
+      std::cout << "Player 2 win" << std::endl;
+    }
   }
 
-
-  printField(arrField);
   return 0;
 }
 
