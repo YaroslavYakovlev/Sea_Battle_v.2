@@ -21,19 +21,22 @@ void singleShip(int (&arr)[n][n], int x, int y){
 }
 
 void ship(int (&arr)[n][n], int begin_x, int begin_y, int end_x, int end_y, int count){
+    for(int i = begin_x; i <= end_x; i++){
+      for(int j = begin_y; j <= end_y; j++){
+        if(arr[i][j] != 0){
+          std::cout << "Error enter" << std::endl;
+        }
+      }
+    }
     if(begin_x > 10 || begin_x < 0 || begin_y > 10 || begin_y < 0 || 
       end_x > 10 || end_x < 0 || end_y > 10 || end_y < 0){
         std::cout << "Error enter" << std::endl;
     }else{
-      // if((end_x - begin_x) && (end_y - begin_y) == count){
         for(int i = begin_x; i <= end_x; i++){
           for(int j = begin_y; j <= end_y; j++){
             arr[i][j] = count;
           }
         }
-      // }else{
-      //   std::cout << "Error coordinate" << std::endl;
-      // }
     }
 }
 
@@ -94,8 +97,8 @@ void battle(int (&arr)[n][n], int shot_x, int shot_y){
 int main(){
   std::cout << "Sea_Battle_v.2" << std::endl;
 
-  int arrField_pleyer_1[n][n];
-  int arrField_pleyer_2[n][n];
+  int arrField_pleyer_1[n][n] = {};
+  int arrField_pleyer_2[n][n] = {};
   int shot_x, shot_y;
   for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
